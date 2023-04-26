@@ -84,12 +84,16 @@ import * as THREE from 'three';
 				renderer.toneMapping = THREE.ACESFilmicToneMapping;
 				renderer.toneMappingExposure = 0.24;
 				document.body.appendChild( renderer.domElement );
-
-				const controls = new DeviceOrientationControls( camera, renderer.domElement );
+				
+				// constcontrols = new THREE.DeviceOrientationControls(this.camera);
+				// const controls = new OrbitControls (camera, renderer.domElement);
+				setupControls = camera => {
+					const controls = new DeviceOrientationControls(camera);
+				  };
 				controls.addEventListener( 'change', render );
 				//controls.maxPolarAngle = Math.PI / 2;
-				controls.enableZoom = false;
-				controls.enablePan = false;
+				// controls.enableZoom = false;
+				// controls.enablePan = false;
 
 				initSky();
 
