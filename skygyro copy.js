@@ -3,14 +3,14 @@ import * as THREE from 'three';
 			import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 			import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 			import { Sky } from 'three/addons/objects/Sky.js';
-			import {DeviceOrientationControls} from './DeviceOrientationControls.js';
+			import { DeviceOrientationControls } from './DeviceOrientationControls1.js';
 
-			let camera, scene, renderer;
+			let camera, scene, renderer, controls;
 
 			let sky, sun;
 
 			init();
-			render();
+			animate();
 			
 			
 
@@ -74,10 +74,17 @@ import * as THREE from 'three';
 
 			function init() {
 
+				
+
 				camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 100, 2000000 );
-				camera.position.set( 0, 100, 2000 );
+				// camera.position.set( 0, 100, 2000 );
+
+				// deviceorientation
+				controls = new DeviceOrientationControls( camera );
 
 				scene = new THREE.Scene();
+
+		
 
 				const helper = new THREE.GridHelper( 10000, 2, 0xffffff, 0xffffff );
 				// scene.add( helper );
@@ -91,8 +98,7 @@ import * as THREE from 'three';
 				document.body.appendChild( renderer.domElement );
 				
 				// deviceorientation
-				const controls = new DeviceOrientationControls(camera, renderer.domElement);
-				controls.addEventListener( 'change', render );
+				// controls = new DeviceOrientationControls( camera );
 				// window.addEventListener("deviceorientation", function(event) {
 				// 	// process event.alpha, event.beta and event.gamma
 				// }, true);
@@ -112,11 +118,25 @@ import * as THREE from 'three';
 
 			}
 
-		
-			
+			function animate() {
 
-			function render() {
+				window.requestAnimationFrame( animate );
 
+				controls.update();
 				renderer.render( scene, camera );
 
 			}
+
+			function onWindowResize() {
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+			}
+
+		
+			
+
+			
