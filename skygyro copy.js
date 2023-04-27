@@ -9,8 +9,14 @@ import * as THREE from 'three';
 
 			let sky, sun;
 
-			init();
-			animate();
+			const startButton = document.getElementById( 'startButton' );
+			startButton.addEventListener( 'click', function () {
+
+				init();
+				animate();
+
+			}, false );
+
 			
 			
 
