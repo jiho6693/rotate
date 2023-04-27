@@ -4,7 +4,7 @@ import {
 	MathUtils,
 	Quaternion,
 	Vector3
-} from 'https://unpkg.com/three@0.138.0/build/three.module.js';
+} from './three.module.js';
 
 /**
  * W3C Device Orientation control (http://w3c.github.io/deviceorientation/spec-source-orientation.html)

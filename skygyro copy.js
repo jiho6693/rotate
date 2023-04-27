@@ -9,8 +9,15 @@ import * as THREE from 'three';
 
 			let sky, sun;
 
-			init();
-			animate();
+			const startButton = document.getElementById( 'startButton' );
+			startButton.addEventListener( 'click', function () {
+
+				init();
+				initSky();
+				animate();
+
+			}, false );
+
 			
 			
 
@@ -73,6 +80,9 @@ import * as THREE from 'three';
 			}
 
 			function init() {
+
+				const overlay = document.getElementById( 'overlay' );
+				overlay.remove();
 
 				
 
