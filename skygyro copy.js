@@ -13,6 +13,7 @@ import * as THREE from 'three';
 			startButton.addEventListener( 'click', function () {
 
 				init();
+				initSky();
 				animate();
 
 			}, false );
@@ -79,6 +80,9 @@ import * as THREE from 'three';
 			}
 
 			function init() {
+
+				const overlay = document.getElementById( 'overlay' );
+				overlay.remove();
 
 				
 
