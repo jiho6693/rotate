@@ -65,7 +65,7 @@ import * as THREE from 'three';
 		
 				
 				
-				gui.add( effectController, 'elevation', -360, 360, 0.1 ).onChange( guiChanged );
+				gui.add( effectController, 'elevation', 0, 360, 0.1 ).onChange( guiChanged );
 			
 
 				guiChanged();
