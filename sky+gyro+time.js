@@ -1,16 +1,32 @@
+let today = new Date();
+var hours = ('0' + today.getHours()).slice(-2); 
+var min = today.getMinutes();
+
+console.log(today)
+console.log(hours)
+console.log(min)
+
+
 import * as THREE from 'three';
 
 			import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 			import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 			import { Sky } from 'three/addons/objects/Sky.js';
-			import { DeviceOrientationControls } from 'three/addons/controls/DeviceOrientationControls.js';
+			import { DeviceOrientationControls } from './DeviceOrientationControls1.js';
 
-			let camera, scene, renderer;
+			let camera, scene, renderer, controls;
 
 			let sky, sun;
 
-			init();
-			render();
+			const startButton = document.getElementById( 'startButton' );
+			startButton.addEventListener( 'click', function () {
+
+				init();
+				initSky();
+				animate();
+
+			}, false );
+
 			
 			
 
@@ -23,17 +39,34 @@ import * as THREE from 'three';
 
 				sun = new THREE.Vector3();
 
-				/// GUI
+				/// GUI		
+
+		
+
+		        
+//
+				let e
+
+
+				if(hours === '12' ){
+					e = 0
+				}
+				else{
+					
+					e = 53
+					
+				}
 
 				const effectController = {
 					turbidity: 5.7,
 					rayleigh: 1.64,
 					mieCoefficient: 0.001,
 					mieDirectionalG: 0.988,
-					elevation: 0,
+					elevation: e,
 					azimuth: 180,
 					exposure: renderer.toneMappingExposure
 				};
+
 
 				function guiChanged() {
 
@@ -57,10 +90,10 @@ import * as THREE from 'three';
 
 				const gui = new GUI();
 
-		
+			
 				
 				
-				gui.add( effectController, 'elevation', -360, 360, 0.1 ).onChange( guiChanged );
+				gui.add( effectController, 'elevation', 0, 180, 0.1 ).onChange( guiChanged );
 			
 
 				guiChanged();
@@ -69,10 +102,20 @@ import * as THREE from 'three';
 
 			function init() {
 
+				const overlay = document.getElementById( 'overlay' );
+				overlay.remove();
+
+				
+
 				camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 100, 2000000 );
-				camera.position.set( 0, 100, 2000 );
+				// camera.position.set( 0, 100, 2000 );
+
+				// deviceorientation
+				controls = new DeviceOrientationControls( camera );
 
 				scene = new THREE.Scene();
+
+		
 
 				const helper = new THREE.GridHelper( 10000, 2, 0xffffff, 0xffffff );
 				// scene.add( helper );
@@ -86,44 +129,10 @@ import * as THREE from 'three';
 				document.body.appendChild( renderer.domElement );
 				
 				// deviceorientation
-				Three.OrbitContorls = function (object, domElement) {
-					const scope = this;
-					let lastBeta = 0;
-					let lastGamma = 0;
-					this.deviceOrientation = {};
-				
-					function onDeviceOrientationChangeEvent(event) {
-						scope.deviceOrientation = event;
-						//Z
-						var alpha = scope.deviceOrientation.alpha
-						? Three.Math.degToRad(scope.deviceOrientation.alpha)
-						: 0;
-				
-						//X'
-						var beta = scope.deviceOrientation.beta
-						? Three.Math.degToRad(scope.deviceOrientation.beta)
-						: 0;
-				
-						//Y"
-						var gamma = scope.deviceOrientation.gamma
-						? Three.Math.degToRad(scope.deviceOrientation.gamma)
-						: 0;
-				
-						// O
-						var orient = scope.screenOrientation
-						? Three.Math.degToRad(scope.screenOrientation)
-						: 0;
-				
-						roatateLeft(lastGamma - gamma);
-						rotateUP(lastBeta - beta);
-				
-						lastBeta = beta; //is working
-						lastGamma = gamma; //doen't work properly
-				
-						window.addEventListener('devicemotion', onDeviceOrientationChangeEvent, false);
-				
-					};
-				}
+				// controls = new DeviceOrientationControls( camera );
+				// window.addEventListener("deviceorientation", function(event) {
+				// 	// process event.alpha, event.beta and event.gamma
+				// }, true);
 
 				// const controls = new Three.OrbitControls( camera, renderer.domElement );
 				// controls.addEventListener( 'change', render );
@@ -140,23 +149,25 @@ import * as THREE from 'three';
 
 			}
 
-			if (window.DeviceOrientationEvent) {
-				window.addEventListener('deviceorientation', function (eventData) {
-			
-			
-					var tiltX = Math.round(eventData.gamma * 2 );
-			
-			
-					var tiltY =  Math.round(eventData.beta * 2);
-			
-					deviceOrientationHandler(tiltX,tiltY);
-			
-				}, false);
-			}
-			
+			function animate() {
 
-			function render() {
+				window.requestAnimationFrame( animate );
 
+				controls.update();
 				renderer.render( scene, camera );
 
 			}
+
+			function onWindowResize() {
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+			}
+
+		
+			
+
+			
