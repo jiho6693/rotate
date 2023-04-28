@@ -7,3 +7,9 @@ console.log(hours)
 console.log(min)
 
 
+if(hours === '12' ){
+    console.log(1)
+}
+else{
+    console.log(3)
+}
