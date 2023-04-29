@@ -1,0 +1,249 @@
+<html>
+<head>
+<title>Solar Angle Calculations</title>
+<!                        ----------START OF JAVASCRIPT---------->
+<script type="text/javascript">
+
+//Define Constants
+var pi = Math.PI;
+
+// Define functions for use later
+
+function radians(x){
+	return x * pi/180; /// 57.29578;
+}
+function degrees(x){
+	return x * 180/pi; ///57.29578;
+}
+
+					///Function to calculate all
+
+function calculateAll(form) {
+
+			// Get all values from fields in form
+
+	varLA = form.varLA.value;
+	varD = form.varD.value;
+	varTR = form.varTR.value;
+	varCT = form.varCT.value;
+	varCZ = form.varCZ.value;
+	varT = form.varT.value;
+
+			// Validate entries
+
+	if (varLA < -90 || varLA > 90) alert("Valid latitute range is -90 to +90 deg!");
+	if (varD < 1 || varD > 366) alert("Valid Day Number range is 1 to 366 only!");
+	if (varTR != 0 && varTR != 1 && varTR != 2) alert("Tracking Axes: 0, 1 or 2 only!");
+	if (varCT < -90 || varCT > 90) alert("Valid range for Collector Tilt is -90 to +90 deg!");
+	if (varCZ < 0 || varCZ > 360) alert("Valid range for Collector Azimuth is 0 to 360 deg only!");
+	if (varT < 0 || varT > 24) alert("Valid Solar Time range is 0 to 24!");
+
+			// Convert angles to radians
+
+	varCZ = radians(varCZ);
+	varCT = radians(varCT);
+	varLA = radians(varLA);
+
+			///////////////////////////////////////////
+			// Perform calculations here
+			///////////////////////////////////////////
+
+// Eqn (3.1) For Hour Angle (Rad)
+		var varHA = radians(15*(varT - 12));
+
+// Eqn (3.7) For Declination (Rad)
+		var varDE = Math.asin(.39795 * Math.cos(radians(.98563 * (varD - 173))));
+
+// Eqn (3.17) For Altitude
+		var varAL = Math.asin(Math.sin(varDE) * Math.sin(varLA) + Math.cos(varDE) * Math.cos(varHA) * Math.cos(varLA));
+
+//Eqn (3.8) For Zenith
+		var varZE = (pi/2) - varAL;
+
+// Eqn (3.19) For Azimuth
+		var	varAZtemp = Math.acos((Math.sin(varDE) * Math.cos(varLA) - Math.cos(varDE) * Math.cos(varHA) * Math.sin(varLA)) / Math.cos(varAL));
+
+	     if (Math.sin(varHA)>0){
+		     var varAZ=2*(pi)-varAZtemp;
+}
+	    if (Math.sin(varHA)<0){
+			var varAZ=varAZtemp;
+}
+	    if (Math.sin(varHA)==0){
+			var varAZ=pi;
+}
+
+// For Collector Angle of Incidence
+	//a) Eqn (4.3) for no tracking
+		if (varTR == 0){
+			var varCI = Math.acos(Math.sin(varAL) * Math.cos(varCT) + Math.cos(varAL) * Math.sin(varCT) * Math.cos(varCZ-varAZ));
+}
+	//b) Eqn (4.19) for 1-axis tracking
+		if (varTR == 1){
+			var varCI = Math.acos(Math.sqrt(1 - ( Math.cos(varAL+varCT) - Math.cos(varCT) * Math.cos(varAL) * (1 - Math.cos(varAZ - varCZ)) )
+			                                  * ( Math.cos(varAL+varCT) - Math.cos(varCT) * Math.cos(varAL) * (1 - Math.cos(varAZ - varCZ)) ) ));
+}
+	//c) Eqn (4.24) for 2-axis tracking
+		if (varTR == 2){
+			var varCI = 0.0;
+}
+	//Eqn (3.22) For the solar time of sunset and sunrise:
+
+	var varHAS = (degrees(Math.acos(-Math.tan(varDE)*Math.tan(varLA)))/15) + 12;
+	var varHAR = 12-(varHAS-12);
+
+	//Eqn (3.23) For hours of daylight:
+		var varHD = 2*(varHAS-12);
+
+// Convert Decimal Solar Time to Hours, Minutes, Seconds
+
+	var hours = parseInt(varT);
+	var mins =  parseInt(60*(varT-hours));
+	var secs =  parseInt(3600*(varT-hours-mins/60));
+
+						// Display results
+
+    var line1 = document.createElement("p");
+	var line2 = document.createElement("p");
+	var line3 = document.createElement("p");
+	var line4 = document.createElement("p");
+	var line5 = document.createElement("p");
+	var line6 = document.createElement("p");
+	var line7 = document.createElement("p");
+	var line8 = document.createElement("p");
+	var line9 = document.createElement("p");
+	var line10 = document.createElement("p");
+	var line11 = document.createElement("p");
+
+						// Assign values to lines
+
+	line1.innerHTML = "At Solar Time: " +  varT + " (hr)";
+	line2.innerHTML = "At Solar Time: " + (hours + ((mins==0)?" : 00":((mins<10)?" :0" :" : ")  + mins)
+	                                             + ((secs==0)?" : 00":((secs<10)?" :0" :" : ")  + secs));
+	line3.innerHTML = "Hour Angle = " + degrees(varHA).toFixed(2) + " (deg)";
+	line4.innerHTML = "Declination = " + degrees(varDE).toFixed(2) + " (deg)";
+	line5.innerHTML = "Sun Altitude Angle = " + degrees(varAL).toFixed(2) + " (deg)";
+	line6.innerHTML = "Sun Zenith Angle = " + degrees(varZE).toFixed(2) + " (deg)";
+	line7.innerHTML = "Sun Azimuth Angle = " + degrees(varAZ).toFixed(2) + " (deg)";
+	line8.innerHTML = "Time of Sunset (solar time) = " + (varHAS).toFixed(3) + " (hr)";
+	line9.innerHTML = "Time of Sunrise (solar time) = " + (varHAR).toFixed(3) + " (hr)";
+	line10.innerHTML = "Hours of Daylight = " + (varHD).toFixed(2) + " (hr)";
+	line11.innerHTML = "Angle of Incidence on Collector = " + degrees(varCI).toFixed(2) + " (deg)";
+
+					// Now display lines
+
+  //document.getElementById ("results").InnerHTML = "";
+
+  var div = document.getElementById("results");
+
+  while (div.hasChildNodes()) {
+	   div.removeChild(div.lastChild);
+  }
+
+	div.appendChild(line1);
+	div.appendChild(line2);
+	div.appendChild(line3);
+	div.appendChild(line4);
+	div.appendChild(line5);
+	div.appendChild(line6);
+	div.appendChild(line7);
+	div.appendChild(line8);
+	div.appendChild(line9);
+	div.appendChild(line10);
+	div.appendChild(line11);
+}
+
+			// Function to clear results.
+
+function clearResult() {
+	var div = document.getElementById("results");
+	while (div.hasChildNodes()) {
+		   div.removeChild(div.lastChild);
+  }
+}
+
+</script>
+
+<!                                 -----END OF JAVASCRIPT----->
+
+<!                                  -----START OF STYLE----->
+
+<style type="text/css">
+body {
+font-family: arial, helvetica, geneva, sans-serif;
+background: white;}
+
+		/* results area look */
+
+#results{
+background-color: #fefe00;
+width: 420px; height: 300px;
+border: solid 1px #333333;
+margin-top: 10px;
+margin-bottom: 20px;
+padding: 10px 10px 10px 10px;
+}
+
+#results p {
+font-size: 12px;
+}
+</style>
+<!                        ---------------END OF STYLE------------>
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-20502165-1']);
+  _gaq.push(['_trackPageview']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+</head>
+<!                         --INPUT DATA TABLE WITH BOXES-->
+
+
+<body
+
+<div align="center"><h1>Solar Angle Calculator</h1>
+<br/>
+<div align="left">
+<p>PROGRAM ANGLECALC - This program uses the equations developed in this book to calculate the sun altitude angle (Eqn. 3.17), sun zenith angle (Eqn. 3.8)
+ and sun azimuth angle (Eqn. 3.19).  Also, with input of the collector (or tracking axis) tilt angle and tilt azimuth,
+ we calculate the angle of incidence between the sun rays and the collector aperture (Eqns. 4.3, 4.19, and 4.24.).  We use Eqn.(3.22) to calculate the sunset
+ and sunrise time, and then Eqn.(3.23) to calculate the hours of sunshine for the day.
+</p>
+<div align="center">
+<br/><br/>
+<form name="angecalcForm">
+<table id="maintable" border="0">
+<tr><td align="right">Latitude (deg)= </td><td>
+  <input type="text" name="varLA" size="10" /></td></tr>
+<tr><td align="right">Day Number = </td><td>
+  <input type="text" name="varD" size="10" /></td></tr>
+<tr><td align="right">Number Of Tracking Axes (0, 1, or 2) =</td><td>
+  <input type="text" name="varTR" size="5" /></td></tr>
+<tr><td align="right">Collector (or Axis) Tilt (deg) =</td><td>
+  <input type="text" name="varCT" size="10" /></td></tr>
+<tr><td align="right">Collector (or Axis) Azimuth (deg) =</td><td>
+  <input type="text" name="varCZ" size="10" /></td></tr>
+<tr><td align="right">Solar Time (24-hour decimal format)(hr) =</td><td>
+  <input type="text" name="varT" size="10" /></td></tr>
+
+<tr>
+    <td><input type="button" name="btnClear" value="Clear Result" onclick="clearResult();"></td>
+    <td><input type="button" name="btnCalculate" value="Calculate Result" onclick="calculateAll(this.form);"></td>
+</tr>
+
+<tr>
+	<td colspan="2"><div id="results"></div></td>
+</tr>
+
+</table>
+
+</form>
+
+</body>
+
+</html>
