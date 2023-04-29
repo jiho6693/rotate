@@ -8,10 +8,3 @@ console.log(min)
 
 
 
-
-function jiho(td)
-{
-    return (td -100);
-}
-
-console.log(jiho(1000));

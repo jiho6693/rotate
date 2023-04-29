@@ -1,25 +1,22 @@
-let today = new Date();
-var hours = ('0' + today.getHours()).slice(-2); 
-var min = today.getMinutes();
-
-console.log(today)
-console.log(hours)
-console.log(min)
-
-
 import * as THREE from 'three';
-
+			
 			import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 			import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-			import { Sky } from 'three/addons/objects/Sky.js';
+			import { Sky } from './Skysource.js';
 			import { DeviceOrientationControls } from './DeviceOrientationControls1.js';
+			
 
+		
 			let camera, scene, renderer, controls;
-
+		
 			let sky, sun;
+
+			
 
 			const startButton = document.getElementById( 'startButton' );
 			startButton.addEventListener( 'click', function () {
+
+				
 
 				init();
 				initSky();
@@ -27,10 +24,16 @@ import * as THREE from 'three';
 
 			}, false );
 
-			
-			
+			function SunPosition
+			{
+			const SunCalc = require('suncalc3');
+			const sunPositionjava = SunCalc.getPosition(new Date(), 41.825226, -71.418884);
+			const sunAzimuth = Math.floor(sunPositionjava.azimuthDegrees);
+			const sunAltitude = Math.floor(sunPositionjava.altitudeDegrees);
+			};
 
 			function initSky() {
+				
 
 				// Add Sky
 				sky = new Sky();
@@ -39,31 +42,19 @@ import * as THREE from 'three';
 
 				sun = new THREE.Vector3();
 
-				/// GUI		
+				
+			
+				
 
-		
-
-		        
-//
-				let e
-
-
-				if(hours === '12' ){
-					e = 0
-				}
-				else{
-					
-					e = 53
-					
-				}
+					/// GUI		
 
 				const effectController = {
 					turbidity: 5.7,
 					rayleigh: 1.64,
 					mieCoefficient: 0.001,
 					mieDirectionalG: 0.988,
-					elevation: e,
-					azimuth: 180,
+					elevation: 10,
+					azimuth: 256,
 					exposure: renderer.toneMappingExposure
 				};
 
