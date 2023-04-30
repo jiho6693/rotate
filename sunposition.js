@@ -1,9 +1,5 @@
 const SunCalc = require('suncalc3');
 
-// import {SunCalc}
-
-
-
 const sunPositionjava = SunCalc.getPosition(new Date(), 41.825226, -71.418884);
 const sunAzimuth = Math.floor(sunPositionjava.azimuthDegrees);
 const sunAltitude = Math.floor(sunPositionjava.altitudeDegrees);
