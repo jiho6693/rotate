@@ -44,9 +44,8 @@
 			function rainy() {
 				
 				let cloudPartices = [];
+
 				
-				const scene = new THREE.Scene();
-				scene.fog = new THREE.FogExp2(0x11111f, 0.002);
 
 				const starGeo = new THREE.BufferGeometry ()
 				const vertices = [];
