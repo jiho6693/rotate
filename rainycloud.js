@@ -7,23 +7,14 @@ import * as THREE from 'three';
 			let cloudPartices = [];
 
 
-			const scene = new THREE.Scene();
-			scene.fog = new THREE.FogExp2(0x11111f, 0.002);
-			scene.background = new THREE.Color(0x000000); 
-
-			const camera = new THREE.PerspectiveCamera(60,window.innerWidth / window.innerHeight,1,1000);
-			camera.position.z = 1;
-			camera.rotation.x = 1.16;
-			camera.rotation.y = -0.12;
-			camera.rotation.z = 0.27;
 			
-			//light
+			scene.fog = new THREE.FogExp2(0x11111f, 0.002);
+		
+
+		
+			
 			const light = new THREE.AmbientLight(0x555555);
 			scene.add(light);
-
-			const directionalLight1 = new THREE.DirectionalLight(0xffeedd);
-			directionalLight1.position.set(0,0,1);
-			scene.add(directionalLight1);
 
 
 			const renderer = new THREE.WebGLRenderer({ antialias: true });

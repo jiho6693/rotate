@@ -1,6 +1,6 @@
 			import * as THREE from 'three';
 			import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
-			// import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+			import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 			import { Sky } from './Skysource.js';
 			import { DeviceOrientationControls } from './DeviceOrientationControls1.js';
 			
@@ -11,7 +11,8 @@
 			const url = 'https://api.openweathermap.org/data/2.5/weather?lat='+ lat + '&lon=' + lon +'&units=imperial&appid='+ apiKey +'';
 
 		
-			let camera, scene, renderer, controls;
+			let camera, scene, renderer, controls ;
+			// + 
 		
 			let sky, sun;
 
@@ -53,7 +54,7 @@
 				starGeo.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
 				let starMaterial = new THREE.PointsMaterial({
 					color:0xaaaaaa,
-					size:0.1,
+					size:0.5,
 					transparent: true
 				})
 				const stars = new THREE.Points(starGeo,starMaterial)
@@ -220,9 +221,15 @@
 				
 
 				camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 100, 2000000 );
-				// camera.position.set( 0, 100, 2000 );
+				camera.position.set( 0, 1, 2 );
 
 				// deviceorientation
+
+				// const controls = new OrbitControls( camera, renderer.domElement );
+				// controls.addEventListener( 'change', render );
+				// // //controls.maxPolarAngle = Math.PI / 2;
+				// controls.enableZoom = false;
+				// controls.enablePan = false;
 				controls = new DeviceOrientationControls( camera );
 
 				scene = new THREE.Scene();
