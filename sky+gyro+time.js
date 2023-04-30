@@ -11,7 +11,6 @@ import * as THREE from 'three';
 		
 			let sky, sun;
 
-			
 
 			const startButton = document.getElementById( 'startButton' );
 			startButton.addEventListener( 'click', function () {
@@ -21,16 +20,14 @@ import * as THREE from 'three';
 				init();
 				initSky();
 				animate();
+			
+				
 
 			}, false );
+			 
+			
 
-			function SunPosition
-			{
-			const SunCalc = require('suncalc3');
-			const sunPositionjava = SunCalc.getPosition(new Date(), 41.825226, -71.418884);
-			const sunAzimuth = Math.floor(sunPositionjava.azimuthDegrees);
-			const sunAltitude = Math.floor(sunPositionjava.altitudeDegrees);
-			};
+			
 
 			function initSky() {
 				
@@ -42,18 +39,25 @@ import * as THREE from 'three';
 
 				sun = new THREE.Vector3();
 
+				// let sunAltitude ;
+				// let sunAzimuth ;
+				// const SunCalc = require('suncalc3');
+
+				// const sunPositionjava = SunCalc.getPosition(new Date(), 41.825226, -71.418884);
+				// sunAzimuth = Math.floor(sunPositionjava.azimuthDegrees);
+				// sunAltitude = Math.floor(sunPositionjava.altitudeDegrees);
 				
-			
-				
+	
 
 					/// GUI		
 
 				const effectController = {
+					
 					turbidity: 5.7,
 					rayleigh: 1.64,
 					mieCoefficient: 0.001,
 					mieDirectionalG: 0.988,
-					elevation: 10,
+					elevation: -0.5,
 					azimuth: 256,
 					exposure: renderer.toneMappingExposure
 				};
@@ -119,20 +123,6 @@ import * as THREE from 'three';
 				renderer.toneMappingExposure = 0.24;
 				document.body.appendChild( renderer.domElement );
 				
-				// deviceorientation
-				// controls = new DeviceOrientationControls( camera );
-				// window.addEventListener("deviceorientation", function(event) {
-				// 	// process event.alpha, event.beta and event.gamma
-				// }, true);
-
-				// const controls = new Three.OrbitControls( camera, renderer.domElement );
-				// controls.addEventListener( 'change', render );
-				//this.controls = new THREE.DeviceOrientationControls(camera, renderer.domElement);
-				// const controls = new OrbitControls (camera, renderer.domElement);
-				// controls.addEventListener( 'change', render );
-				//controls.maxPolarAngle = Math.PI / 2;
-				// controls.enableZoom = false;
-				// controls.enablePan = false;
 
 				initSky();
 
@@ -142,7 +132,8 @@ import * as THREE from 'three';
 
 			function animate() {
 
-				window.requestAnimationFrame( animate );
+				window.requestAnimationFrame( animate );	
+				
 
 				controls.update();
 				renderer.render( scene, camera );
