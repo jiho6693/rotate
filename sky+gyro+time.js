@@ -56,7 +56,7 @@
 				const cloudVertices = [];
 				loader.load("./smoke.png", function(texture){
 	
-					const cloudGeo = new THREE.PlaneGeometry(500,500);
+					const cloudGeo = new THREE.PlaneGeometry(1000,1000);
 					const cloudMaterial = new THREE.MeshLambertMaterial({
 					map: texture,
 					transparent: true
@@ -114,15 +114,16 @@
 
 			}
 
-			let cloudPartices = [];
+			
 
 			function clouds() {
+				let cloudPartices = [];
 
 				const loader = new THREE.TextureLoader();
 				const cloudVertices = [];
 				loader.load("./smoke.png", function(texture){
 	
-					const cloudGeo = new THREE.PlaneGeometry(500,500);
+					const cloudGeo = new THREE.PlaneGeometry(100,100);
 					const cloudMaterial = new THREE.MeshLambertMaterial({
 					map: texture,
 					transparent: true
@@ -207,7 +208,7 @@
 					mieDirectionalG: 0.988,
 					elevation: ele,
 					azimuth: 180,
-					exposure: 0.11
+					exposure: 0.13
 				};
 
 				function guiChanged() {
