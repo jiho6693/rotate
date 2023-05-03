@@ -22,14 +22,27 @@
 
 				
 				init();
-				initSky();
 				animate();
-				rainy();
-				
-			
 				
 
-			}, false );
+				fetch(url)
+			.then(response => response.json())
+			.then((data) => { console.log(data)
+				const weather = data.weather[0].main;
+				if(weather === 'Rainy'|| weather === 'Clouds'){
+					
+					sunnySky();
+					rainy(); 
+					
+				} else if(weather === 'Clouds'){
+					sunnySky();
+				} else{
+					sunnySky();
+				}
+		
+				
+			})
+				}, false );
 			 
 			// function sun1 ()
 			// {
@@ -44,8 +57,6 @@
 			function rainy() {
 				
 				let cloudPartices = [];
-
-				
 
 				const starGeo = new THREE.BufferGeometry ()
 				const vertices = [];
@@ -127,8 +138,7 @@
 
 			}
 
-			function initSky() {
-				
+			function cloudsky() {	
 				let ele
 				let today = new Date();
 				var hours = ('0' + today.getHours()).slice(-2);
@@ -164,7 +174,6 @@
 					ele = -10
 				}
 				
-
 				// Add Sky
 				sky = new Sky();
 				sky.scale.setScalar( 450000 );
@@ -176,10 +185,10 @@
 
 				const effectController = {
 					
-					turbidity: 5.7,
-					rayleigh: 1.64,
-					mieCoefficient: 0.001,
-					mieDirectionalG: 0.988,
+					turbidity: 8.2,
+					rayleigh: 1.98,
+					mieCoefficient: 0.04,
+					mieDirectionalG: 0.95,
 					elevation: ele,
 					azimuth: 180,
 					exposure: renderer.toneMappingExposure
@@ -202,17 +211,93 @@
 
 					renderer.toneMappingExposure = effectController.exposure;
 					renderer.render( scene, camera );
-
 				}
 
 					const gui = new GUI();
-
-				
-					
-					
 					 gui.add( effectController, 'elevation', 0, 180, 0.1 ).onChange( guiChanged );
-				
+					guiChanged();
 
+			}
+
+		
+			function sunnySky() {
+				
+				let ele
+				let today = new Date();
+				var hours = ('0' + today.getHours()).slice(-2);
+				if(hours === 5){
+					ele = 0
+				}else if(hours === '6'){
+					ele = 5
+				}else if(hours === '7'){
+					ele = 15
+				}else if(hours === '8'){
+					ele = 30
+				}else if(hours === '9'){
+					ele = 45
+				}else if(hours === '10'){
+					ele = 60
+				}else if(hours === '11'){
+					ele = 75
+				}else if(hours === '12'){
+					ele = 90
+				}else if(hours === '13'){
+					ele = 105
+				}else if(hours === '14'){
+					ele = 120
+				}else if(hours === '15'){
+					ele = 135
+				}else if(hours === '17'){
+					ele = 150
+				}else if(hours === '18'){
+					ele = 165
+				}else if(hours === '19'){
+					ele = 180
+				}else {
+					ele = - 10
+				}
+				
+				// Add Sky
+				sky = new Sky();
+				sky.scale.setScalar( 450000 );
+				scene.add( sky );
+
+				sun = new THREE.Vector3();
+
+				/// GUI		
+
+				const effectController = {
+					
+					turbidity: 8.2,
+					rayleigh: 1.98,
+					mieCoefficient: 0.04,
+					mieDirectionalG: 0.95,
+					elevation: ele,
+					azimuth: 180,
+					exposure: renderer.toneMappingExposure
+				};
+
+				function guiChanged() {
+
+					const uniforms = sky.material.uniforms;
+					uniforms[ 'turbidity' ].value = effectController.turbidity;
+					uniforms[ 'rayleigh' ].value = effectController.rayleigh;
+					uniforms[ 'mieCoefficient' ].value = effectController.mieCoefficient;
+					uniforms[ 'mieDirectionalG' ].value = effectController.mieDirectionalG;
+
+					const phi = THREE.MathUtils.degToRad( 90 - effectController.elevation );
+					const theta = THREE.MathUtils.degToRad( effectController.azimuth );
+
+					sun.setFromSphericalCoords( 1, phi, theta );
+
+					uniforms[ 'sunPosition' ].value.copy( sun );
+
+					renderer.toneMappingExposure = effectController.exposure;
+					renderer.render( scene, camera );
+				}
+
+					const gui = new GUI();
+					 gui.add( effectController, 'elevation', 0, 180, 0.1 ).onChange( guiChanged );
 					guiChanged();
 
 			}
@@ -234,25 +319,21 @@
 				// // //controls.maxPolarAngle = Math.PI / 2;
 				// controls.enableZoom = false;
 				// controls.enablePan = false;
-				controls = new DeviceOrientationControls( camera );
+				//controls = new DeviceOrientationControls( camera );
 
 				scene = new THREE.Scene();
 
-		
-
-				const helper = new THREE.GridHelper( 10000, 2, 0xffffff, 0xffffff );
-				// scene.add( helper );
 
 				renderer = new THREE.WebGLRenderer();
 				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				renderer.outputEncoding = THREE.sRGBEncoding;
 				renderer.toneMapping = THREE.ACESFilmicToneMapping;
-				renderer.toneMappingExposure = 0.24;
+				renderer.toneMappingExposure = 0.22;
 				document.body.appendChild( renderer.domElement );
 				
 
-				initSky();
+				sunnySky();
 
 				window.addEventListener( 'resize', onWindowResize );
 

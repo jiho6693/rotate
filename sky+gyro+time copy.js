@@ -17,10 +17,25 @@
 
 			init();
 			render();
-			rainy();
+			fetch(url)
+			.then(response => response.json())
+			.then((data) => { console.log(data)
+				const weather = data.weather[0].main;
+				if(weather === 'Rainy'|| weather === 'Closuds'){
+					rainy(); 
+					initSky();
+				} else {
+					initSky1();
+				}
+
+			})
+			
+		
 
 			function rainy() {
-				
+				scene.fog = new THREE.FogExp2(0x11111f, 2);
+				scene.background = new THREE.Color(0x000000); 
+
 				let cloudPartices = [];
 
 				
@@ -48,7 +63,7 @@
 				const cloudVertices = [];
 				loader.load("./smoke.png", function(texture){
 	
-					const cloudGeo = new THREE.PlaneGeometry(500,500);
+					const cloudGeo = new THREE.PlaneGeometry(1000,1000);
 					const cloudMaterial = new THREE.MeshLambertMaterial({
 					map: texture,
 					transparent: true
@@ -105,7 +120,9 @@
 
 			}
 
-			function initSky() {
+			function initSky1() {
+
+				
 
 				// Add Sky
 				sky = new Sky();
@@ -114,6 +131,7 @@
 
 				sun = new THREE.Vector3();
 
+
 				/// GUI
 
 				const effectController = {
@@ -121,7 +139,67 @@
 					rayleigh: 3,
 					mieCoefficient: 0.005,
 					mieDirectionalG: 0.7,
-					elevation: 2,
+					elevation: 10,
+					azimuth: 180,
+					exposure: renderer.toneMappingExposure
+				};
+
+				function guiChanged() {
+
+					const uniforms = sky.material.uniforms;
+					uniforms[ 'turbidity' ].value = effectController.turbidity;
+					uniforms[ 'rayleigh' ].value = effectController.rayleigh;
+					uniforms[ 'mieCoefficient' ].value = effectController.mieCoefficient;
+					uniforms[ 'mieDirectionalG' ].value = effectController.mieDirectionalG;
+
+					const phi = THREE.MathUtils.degToRad( 90 - effectController.elevation );
+					const theta = THREE.MathUtils.degToRad( effectController.azimuth );
+
+					sun.setFromSphericalCoords( 1, phi, theta );
+
+					uniforms[ 'sunPosition' ].value.copy( sun );
+
+					renderer.toneMappingExposure = effectController.exposure;
+					renderer.render( scene, camera );
+
+				}
+
+				const gui = new GUI();
+
+				gui.add( effectController, 'turbidity', 0.0, 20.0, 0.1 ).onChange( guiChanged );
+				gui.add( effectController, 'rayleigh', 0.0, 4, 0.001 ).onChange( guiChanged );
+				gui.add( effectController, 'mieCoefficient', 0.0, 0.1, 0.001 ).onChange( guiChanged );
+				gui.add( effectController, 'mieDirectionalG', 0.0, 1, 0.001 ).onChange( guiChanged );
+				gui.add( effectController, 'elevation', 0, 90, 0.1 ).onChange( guiChanged );
+				gui.add( effectController, 'azimuth', - 180, 180, 0.1 ).onChange( guiChanged );
+				gui.add( effectController, 'exposure', 0, 1, 0.0001 ).onChange( guiChanged );
+
+				guiChanged();
+
+			}
+
+		
+
+			function initSky() {
+
+				
+
+				// Add Sky
+				sky = new Sky();
+				sky.scale.setScalar( 450000 );
+				scene.add( sky );
+
+				sun = new THREE.Vector3();
+
+
+				/// GUI
+
+				const effectController = {
+					turbidity: 10,
+					rayleigh: 3,
+					mieCoefficient: 0.005,
+					mieDirectionalG: 0.7,
+					elevation: 100,
 					azimuth: 180,
 					exposure: renderer.toneMappingExposure
 				};
