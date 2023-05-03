@@ -11,8 +11,21 @@ fetch(url)
     console.log(weather)
     if(weather === "Snow"|| weather === "Rain" ){
         console.log("snow")
+        time();
     } else {
         console.log("not bad")
+        time();
     }
 
   })
+
+function time(){
+  let today = new Date();
+var hours = ('0' + today.getHours()).slice(-2); 
+var min = today.getMinutes();
+
+console.log(today)
+console.log(hours)
+console.log(min)
+};
+

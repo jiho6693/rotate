@@ -25,34 +25,9 @@
 				animate();
 				
 
-				fetch(url)
-			.then(response => response.json())
-			.then((data) => { console.log(data)
-				const weather = data.weather[0].main;
-				if(weather === 'Rainy'|| weather === 'Clouds'){
-					
-					sunnySky();
-					rainy(); 
-					
-				} else if(weather === 'Clouds'){
-					sunnySky();
-				} else{
-					sunnySky();
-				}
-		
 				
-			})
 				}, false );
 			 
-			// function sun1 ()
-			// {
-			// let SunCalc = require('suncalc3');
-			// let SunAltitude;
-			// let SunAzimuth;
-			// const SunPosition = SunCalc.getPosition(new Date(), 41.825226, 71.418884);
-			// SunAltitude = Math.floor(SunPosition.altitudeDegrees);
-			// SunAzimuth = Math.floor(SunPosition.azimuthDegrees);
-			// }
 
 			function rainy() {
 				
@@ -107,6 +82,7 @@
 				flash.position.set(200,300,100);
 				scene.add(flash);
 				
+				// animation
 				function animate() {
 					requestAnimationFrame(animate);
 					cloudVertices.forEach(p => {
@@ -138,7 +114,45 @@
 
 			}
 
-			function cloudsky() {	
+			let cloudPartices = [];
+
+			function clouds() {
+
+				const loader = new THREE.TextureLoader();
+				const cloudVertices = [];
+				loader.load("./smoke.png", function(texture){
+	
+					const cloudGeo = new THREE.PlaneGeometry(500,500);
+					const cloudMaterial = new THREE.MeshLambertMaterial({
+					map: texture,
+					transparent: true
+					});
+	
+					for(let p=0; p<25; p++) {
+					let cloud = new THREE.Mesh(cloudGeo,cloudMaterial);
+					cloud.position.set(
+						Math.random()*800 -400,
+						500,
+						Math.random()*500 - 450
+					);
+					cloud.rotation.x = 1.16;
+					cloud.rotation.y = -0.12;
+					cloud.rotation.z = Math.random()*360;
+					cloud.material.opacity = 0.10;
+					cloudVertices.push(cloud);
+					scene.add(cloud);
+					}})
+				
+				function animate() {
+					requestAnimationFrame(animate);
+					cloudVertices.forEach(p => {
+						p.rotation.z -=0.002;
+					  });
+					}
+				animate();
+			}
+
+			function cloudSky() {	
 				let ele
 				let today = new Date();
 				var hours = ('0' + today.getHours()).slice(-2);
@@ -164,14 +178,16 @@
 					ele = 120
 				}else if(hours === '15'){
 					ele = 135
-				}else if(hours === '17'){
+				}else if(hours === '16'){
 					ele = 150
+				}else if(hours === '17'){
+					ele = 160
 				}else if(hours === '18'){
 					ele = 165
 				}else if(hours === '19'){
 					ele = 180
 				}else {
-					ele = -10
+					ele = - 10
 				}
 				
 				// Add Sky
@@ -185,13 +201,13 @@
 
 				const effectController = {
 					
-					turbidity: 8.2,
-					rayleigh: 1.98,
-					mieCoefficient: 0.04,
-					mieDirectionalG: 0.95,
+					turbidity: 20,
+					rayleigh: 1.73,
+					mieCoefficient: 0.036,
+					mieDirectionalG: 0.988,
 					elevation: ele,
 					azimuth: 180,
-					exposure: renderer.toneMappingExposure
+					exposure: 0.11
 				};
 
 				function guiChanged() {
@@ -247,8 +263,10 @@
 					ele = 120
 				}else if(hours === '15'){
 					ele = 135
-				}else if(hours === '17'){
+				}else if(hours === '16'){
 					ele = 150
+				}else if(hours === '17'){
+					ele = 160
 				}else if(hours === '18'){
 					ele = 165
 				}else if(hours === '19'){
@@ -274,7 +292,7 @@
 					mieDirectionalG: 0.95,
 					elevation: ele,
 					azimuth: 180,
-					exposure: renderer.toneMappingExposure
+					exposure: 0.18
 				};
 
 				function guiChanged() {
@@ -297,8 +315,10 @@
 				}
 
 					const gui = new GUI();
+
 					 gui.add( effectController, 'elevation', 0, 180, 0.1 ).onChange( guiChanged );
-					guiChanged();
+					
+					 guiChanged();
 
 			}
 
@@ -329,11 +349,30 @@
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				renderer.outputEncoding = THREE.sRGBEncoding;
 				renderer.toneMapping = THREE.ACESFilmicToneMapping;
-				renderer.toneMappingExposure = 0.22;
+				renderer.toneMappingExposure = 0.18;
 				document.body.appendChild( renderer.domElement );
 				
+				
+				fetch(url)
+			.then(response => response.json())
+			.then((data) => { console.log(data)
+				const weather = data.weather[0].main;
+				if(weather === 'Rainy'|| weather === 'Clousds'){
+					
+					cloudSky();
+					rainy(); 
+				
+					
+				} else if(weather === 'Clouds'){
+					cloudSky();
+					clouds();
+				} else{
+					sunnySky();
 
-				sunnySky();
+				}
+		
+				
+			})
 
 				window.addEventListener( 'resize', onWindowResize );
 

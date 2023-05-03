@@ -141,7 +141,7 @@
 					mieDirectionalG: 0.7,
 					elevation: 10,
 					azimuth: 180,
-					exposure: renderer.toneMappingExposure
+					exposure: 0.1
 				};
 
 				function guiChanged() {
