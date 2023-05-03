@@ -1,6 +1,6 @@
 			import * as THREE from 'three';
 			import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
-			import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+			import { OrbitControls } from 'OrbitControls';
 			import { Sky } from './Skysource.js';
 			import { DeviceOrientationControls } from './DeviceOrientationControls1.js';
 			
@@ -11,35 +11,13 @@
 			const url = 'https://api.openweathermap.org/data/2.5/weather?lat='+ lat + '&lon=' + lon +'&units=imperial&appid='+ apiKey +'';
 
 		
-			let camera, scene, renderer, controls ;
-			// + 
-		
+			let camera, scene, renderer;
+
 			let sky, sun;
 
-
-			const startButton = document.getElementById( 'startButton' );
-			startButton.addEventListener( 'click', function () {
-
-				
-				init();
-				initSky();
-				animate();
-				rainy();
-				
-			
-				
-
-			}, false );
-			 
-			// function sun1 ()
-			// {
-			// let SunCalc = require('suncalc3');
-			// let SunAltitude;
-			// let SunAzimuth;
-			// const SunPosition = SunCalc.getPosition(new Date(), 41.825226, 71.418884);
-			// SunAltitude = Math.floor(SunPosition.altitudeDegrees);
-			// SunAzimuth = Math.floor(SunPosition.azimuthDegrees);
-			// }
+			init();
+			render();
+			rainy();
 
 			function rainy() {
 				
@@ -128,42 +106,6 @@
 			}
 
 			function initSky() {
-				
-				let ele
-				let today = new Date();
-				var hours = ('0' + today.getHours()).slice(-2);
-				if(hours === 5){
-					ele = 0
-				}else if(hours === '6'){
-					ele = 5
-				}else if(hours === '7'){
-					ele = 15
-				}else if(hours === '8'){
-					ele = 30
-				}else if(hours === '9'){
-					ele = 45
-				}else if(hours === '10'){
-					ele = 60
-				}else if(hours === '11'){
-					ele = 75
-				}else if(hours === '12'){
-					ele = 90
-				}else if(hours === '13'){
-					ele = 105
-				}else if(hours === '14'){
-					ele = 120
-				}else if(hours === '15'){
-					ele = 135
-				}else if(hours === '17'){
-					ele = 150
-				}else if(hours === '18'){
-					ele = 165
-				}else if(hours === '19'){
-					ele = 180
-				}else {
-					ele = -10
-				}
-				
 
 				// Add Sky
 				sky = new Sky();
@@ -172,15 +114,14 @@
 
 				sun = new THREE.Vector3();
 
-				/// GUI		
+				/// GUI
 
 				const effectController = {
-					
-					turbidity: 5.7,
-					rayleigh: 1.64,
-					mieCoefficient: 0.001,
-					mieDirectionalG: 0.988,
-					elevation: ele,
+					turbidity: 10,
+					rayleigh: 3,
+					mieCoefficient: 0.005,
+					mieDirectionalG: 0.7,
+					elevation: 2,
 					azimuth: 180,
 					exposure: renderer.toneMappingExposure
 				};
@@ -205,66 +146,46 @@
 
 				}
 
-					const gui = new GUI();
+				const gui = new GUI();
 
-				
-					
-					
-					 gui.add( effectController, 'elevation', 0, 180, 0.1 ).onChange( guiChanged );
-				
+				gui.add( effectController, 'turbidity', 0.0, 20.0, 0.1 ).onChange( guiChanged );
+				gui.add( effectController, 'rayleigh', 0.0, 4, 0.001 ).onChange( guiChanged );
+				gui.add( effectController, 'mieCoefficient', 0.0, 0.1, 0.001 ).onChange( guiChanged );
+				gui.add( effectController, 'mieDirectionalG', 0.0, 1, 0.001 ).onChange( guiChanged );
+				gui.add( effectController, 'elevation', 0, 90, 0.1 ).onChange( guiChanged );
+				gui.add( effectController, 'azimuth', - 180, 180, 0.1 ).onChange( guiChanged );
+				gui.add( effectController, 'exposure', 0, 1, 0.0001 ).onChange( guiChanged );
 
-					guiChanged();
+				guiChanged();
 
 			}
 
 			function init() {
 
-				const overlay = document.getElementById( 'overlay' );
-				overlay.remove();
-
-				
-
 				camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 100, 2000000 );
 				camera.position.set( 0, 1, 2 );
 
-				// deviceorientation
-
-				// const controls = new OrbitControls( camera, renderer.domElement );
-				// controls.addEventListener( 'change', render );
-				// // //controls.maxPolarAngle = Math.PI / 2;
-				// controls.enableZoom = false;
-				// controls.enablePan = false;
-				controls = new DeviceOrientationControls( camera );
-
 				scene = new THREE.Scene();
 
-		
-
 				const helper = new THREE.GridHelper( 10000, 2, 0xffffff, 0xffffff );
-				// scene.add( helper );
+				scene.add( helper );
 
 				renderer = new THREE.WebGLRenderer();
 				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( window.innerWidth, window.innerHeight );
-				renderer.outputEncoding = THREE.sRGBEncoding;
 				renderer.toneMapping = THREE.ACESFilmicToneMapping;
-				renderer.toneMappingExposure = 0.24;
+				renderer.toneMappingExposure = 0.5;
 				document.body.appendChild( renderer.domElement );
-				
+
+				const controls = new OrbitControls( camera, renderer.domElement );
+				controls.addEventListener( 'change', render );
+				//controls.maxPolarAngle = Math.PI / 2;
+				controls.enableZoom = false;
+				controls.enablePan = false;
 
 				initSky();
 
 				window.addEventListener( 'resize', onWindowResize );
-
-			}
-
-			function animate() {
-
-				window.requestAnimationFrame( animate );	
-				
-
-				controls.update();
-				renderer.render( scene, camera );
 
 			}
 
@@ -275,9 +196,14 @@
 
 				renderer.setSize( window.innerWidth, window.innerHeight );
 
+				render();
+
 			}
 
-		
-			
+			function render() {
+
+				renderer.render( scene, camera );
+
+			}
 
 			
