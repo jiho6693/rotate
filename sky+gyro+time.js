@@ -339,7 +339,7 @@
 				// // //controls.maxPolarAngle = Math.PI / 2;
 				// controls.enableZoom = false;
 				// controls.enablePan = false;
-				//controls = new DeviceOrientationControls( camera );
+				controls = new DeviceOrientationControls( camera );
 
 				scene = new THREE.Scene();
 
