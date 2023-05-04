@@ -23,7 +23,7 @@
 			.then(response => response.json())
 			.then((data) => { console.log(data)
 				const weather = data.weather[0].main;
-				if(weather === 'Rainy'|| weather === 'Closuds'){
+				if(weather === 'Rainy'|| weather === 'Clouds'){
 					rainy(); 
 					initSky();
 				} else {
@@ -38,14 +38,14 @@
 				// // load a resource
 				loader01.load(
 					// resource URL
-					'./Rock1.glb',
+					'./goodby.glb',
 					// called when the resource is loaded
 					function ( gltf ) {
 					
 					gltf.scene.scale.set(50, 50, 50); 
-					gltf.scene.position.y= -0.7
-					gltf.scene.position.z= 0.4
-					gltf.scene.position.x= -0.8
+					gltf.scene.position.y= -10
+					gltf.scene.position.z= 0
+					gltf.scene.position.x= 0
 					gltf.scene.rotation.z = Math.PI / 2;
 					gltf.scene.traverse( function ( child ){
 					child.castShadow = true;
@@ -286,7 +286,7 @@
 
 				
 				camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 100, 2000000 );
-				camera.position.set( 0, 10, 10 );
+				camera.position.set( 0, 0, 1);
 
 				scene = new THREE.Scene();
 
