@@ -38,7 +38,7 @@ class Sky extends Mesh {
 			depthWrite: false
 		} );
 
-		super( new BoxGeometry( 1, 1, 1 ), material );
+		super( new BoxGeometry( 100, 100, 100 ), material );
 
 		this.isSky = true;
 

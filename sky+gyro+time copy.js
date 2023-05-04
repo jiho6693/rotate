@@ -1,6 +1,7 @@
 			import * as THREE from 'three';
 			import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 			import { OrbitControls } from 'OrbitControls';
+			import { GLTFLoader } from 'GLTFLoader';
 			import { Sky } from './Skysource.js';
 			import { DeviceOrientationControls } from './DeviceOrientationControls1.js';
 			
@@ -16,6 +17,7 @@
 			let sky, sun;
 
 			init();
+			rock();
 			render();
 			fetch(url)
 			.then(response => response.json())
@@ -29,8 +31,50 @@
 				}
 
 			})
+
+			function rock(){
 			
-		
+			const loader01 = new GLTFLoader();
+				// // load a resource
+				loader01.load(
+					// resource URL
+					'./Rock1.glb',
+					// called when the resource is loaded
+					function ( gltf ) {
+					
+					gltf.scene.scale.set(50, 50, 50); 
+					gltf.scene.position.y= -0.7
+					gltf.scene.position.z= 0.4
+					gltf.scene.position.x= -0.8
+					gltf.scene.rotation.z = Math.PI / 2;
+					gltf.scene.traverse( function ( child ){
+					child.castShadow = true;
+					child.receiveShadow = true;
+					child.userData.link = "1";
+					});
+						scene.add( gltf.scene );
+
+						gltf.animations; // Array<THREE.AnimationClip>
+						gltf.scene; // THREE.Group
+						gltf.scenes; // Array<THREE.Group>
+						gltf.cameras; // Array<THREE.Camera>
+						gltf.asset; // Object
+
+					},
+					// called while loading is progressing
+					function ( xhr ) {
+
+						console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+
+					},
+					// called when loading has errors
+					function ( error ) {
+
+						console.log( 'An error happened' );
+
+					}
+				);
+				}
 
 			function rainy() {
 				scene.fog = new THREE.FogExp2(0x11111f, 2);
@@ -240,8 +284,9 @@
 
 			function init() {
 
+				
 				camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 100, 2000000 );
-				camera.position.set( 0, 1, 2 );
+				camera.position.set( 0, 10, 10 );
 
 				scene = new THREE.Scene();
 
@@ -260,6 +305,9 @@
 				//controls.maxPolarAngle = Math.PI / 2;
 				controls.enableZoom = false;
 				controls.enablePan = false;
+
+				const light = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 );
+				scene.add( light );
 
 				initSky();
 
