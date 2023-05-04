@@ -1,5 +1,6 @@
 			import * as THREE from 'three';
 			import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+			import { GLTFLoader } from 'GLTFLoader';
 			import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 			import { Sky } from './Skysource.js';
 			import { DeviceOrientationControls } from './DeviceOrientationControls1.js';
