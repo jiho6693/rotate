@@ -48,7 +48,7 @@ startButton.addEventListener( 'click', function () {
 				gltf.scene.traverse( function ( child ){
 				child.castShadow = true;
 				child.receiveShadow = true;
-				child.userData.link = "1";
+				child.userData.link = "https://jiho6693.github.io/midterm/";
 				});
 					scene.add( gltf.scene );
 
@@ -378,6 +378,9 @@ function init() {
 	const overlay = document.getElementById( 'overlay' );
 	overlay.remove();
 
+	const raycaster = new THREE.Raycaster();
+	const pointer = new THREE.Vector2();
+
 	
 
 	camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 100, 2000000 );
@@ -424,6 +427,55 @@ function init() {
 
 	
 })
+
+function changeCursor(event) {
+	if (event.target === renderer.domElement) {
+	  renderer.domElement.style.cursor = 'pointer';
+	} else {
+	  renderer.domElement.style.cursor = 'default';
+	}
+  }
+  renderer.domElement.addEventListener('mousemove', function(event) {
+	var raycaster = new THREE.Raycaster();
+	pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+	pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+	raycaster.setFromCamera(pointer, camera);
+	var intersects = raycaster.intersectObjects(scene.children);
+	if (intersects.length > 0) {
+	  changeCursor(event);
+	} else {
+	  changeCursor(event);
+	}
+  });
+
+// Add an event listener for mousedown and touchstart events
+function onMouseClick( event) {
+    // Calculate mouse position
+	pointer.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+    pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+    
+    // Set raycaster
+    raycaster.setFromCamera( pointer, camera );
+
+    // Check for intersections
+    var intersects = raycaster.intersectObjects( scene.children );
+
+    // If an intersection is found, redirect to the desired URL
+
+	//one
+	if ( intersects.length > 0 ) {
+		const { link } = intersects[0].object.userData;
+		if (link === '1'){
+	    }
+		else {
+		window.location.href = link, '_blank';
+	    }
+    }
+
+}
+
+
+window.addEventListener( 'pointerdown', onMouseClick, false );	 
 
 	window.addEventListener( 'resize', onWindowResize );
 

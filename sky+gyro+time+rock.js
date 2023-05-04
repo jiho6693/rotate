@@ -48,7 +48,7 @@
 							gltf.scene.traverse( function ( child ){
 							child.castShadow = true;
 							child.receiveShadow = true;
-							child.userData.link = "1";
+							child.userData.link = "www.jiho6693.com";
 							});
 								scene.add( gltf.scene );
 		
