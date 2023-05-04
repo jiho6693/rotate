@@ -174,8 +174,45 @@
 				scene.add( sky );
 
 				sun = new THREE.Vector3();
-
-
+				
+				let today = new Date();
+				var hours = ('0' + today.getHours()).slice(-2); 
+				var min = today.getMinutes();
+				var seconds = today.getSeconds();
+				let ele = 50;
+				if(seconds === 5){
+					ele = 0
+				}else if(seconds === '6'){
+					ele = 5
+				}else if(seconds === '7'){
+					ele = 15
+				}else if(seconds === '8'){
+					ele = 30
+				}else if(seconds === '9'){
+					ele = 45
+				}else if(seconds === '10'){
+					ele = 60
+				}else if(seconds === '11'){
+					ele = 75
+				}else if(seconds === '12'){
+					ele = 90
+				}else if(seconds === '13'){
+					ele = 105
+				}else if(seconds === '14'){
+					ele = 120
+				}else if(seconds === '15'){
+					ele = 135
+				}else if(seconds === '16'){
+					ele = 150
+				}else if(seconds === '17'){
+					ele = 160
+				}else if(seconds === '18'){
+					ele = 165
+				}else if(seconds === '19'){
+					ele = 180
+				}else {
+					ele = - 10
+				}
 				/// GUI
 
 				const effectController = {
@@ -183,7 +220,7 @@
 					rayleigh: 3,
 					mieCoefficient: 0.005,
 					mieDirectionalG: 0.7,
-					elevation: 10,
+					elevation: ele,
 					azimuth: 180,
 					exposure: 0.1
 				};
@@ -327,6 +364,10 @@
 			}
 
 			function render() {
+				// const time = Date.now() * 0.0005;
+
+				// elevation = ( time ) + 1.25;
+
 
 				renderer.render( scene, camera );
 

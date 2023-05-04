@@ -160,6 +160,8 @@
 				let ele
 				let today = new Date();
 				var hours = ('0' + today.getHours()).slice(-2);
+				
+
 				if(hours === 5){
 					ele = 0
 				}else if(hours === '6'){
