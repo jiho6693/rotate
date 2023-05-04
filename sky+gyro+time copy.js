@@ -246,7 +246,7 @@
 				scene = new THREE.Scene();
 
 				const helper = new THREE.GridHelper( 10000, 2, 0xffffff, 0xffffff );
-				scene.add( helper );
+				//scene.add( helper );
 
 				renderer = new THREE.WebGLRenderer();
 				renderer.setPixelRatio( window.devicePixelRatio );
