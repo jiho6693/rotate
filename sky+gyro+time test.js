@@ -38,7 +38,7 @@
 				// // load a resource
 				loader01.load(
 					// resource URL
-					'./sca.glb',
+					'./Rock1.glb',
 					// called when the resource is loaded
 					function ( gltf ) {
 					
