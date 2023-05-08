@@ -88,7 +88,7 @@
 				const vertices = [];
 				for (let i = 0; i < 15000; i++) {
 				const x = Math.random() * 400 - 300;
-				const y = Math.random() * 500 - 250;
+				const y = Math.random() * 50 - 250;
 				const z = Math.random() * 400 - 200;
 				vertices.push(x, y, z);
 				}
