@@ -237,7 +237,7 @@
 					renderer.render( scene, camera );
 				}
 
-					 const gui = new GUI();
+					//  const gui = new GUI();
 					//  gui.add( effectController, 'elevation', 0, 180, 0.1 ).onChange( guiChanged );
 					 guiChanged();
 
