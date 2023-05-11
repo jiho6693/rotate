@@ -211,7 +211,7 @@
 					rayleigh: 1.73,
 					mieCoefficient: 0.036,
 					mieDirectionalG: 0.988,
-					elevation: ele,
+					elevation: 160,
 					azimuth: 180,
 					exposure: 0.13
 				};
@@ -235,9 +235,9 @@
 					renderer.render( scene, camera );
 				}
 
-					const gui = new GUI();
-					 gui.add( effectController, 'elevation', 0, 180, 0.1 ).onChange( guiChanged );
-					guiChanged();
+					// const gui = new GUI();
+					//  gui.add( effectController, 'elevation', 0, 180, 0.1 ).onChange( guiChanged );
+					// guiChanged();
 
 			}
 
@@ -296,7 +296,7 @@
 					rayleigh: 1.98,
 					mieCoefficient: 0.04,
 					mieDirectionalG: 0.95,
-					elevation: ele,
+					elevation: 160,
 					azimuth: 180,
 					exposure: 0.18
 				};
