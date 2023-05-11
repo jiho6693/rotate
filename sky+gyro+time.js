@@ -6,6 +6,8 @@
 			import { DeviceOrientationControls } from './DeviceOrientationControls1.js';
 			
 			const apiKey = "37a534876bbe79185bf49fb989e91028"
+
+
 			let lat = "41.825226"; 
 			let lon = "-71.418884";
 
@@ -235,9 +237,9 @@
 					renderer.render( scene, camera );
 				}
 
-					// const gui = new GUI();
+					 const gui = new GUI();
 					//  gui.add( effectController, 'elevation', 0, 180, 0.1 ).onChange( guiChanged );
-					// guiChanged();
+					 guiChanged();
 
 			}
 
